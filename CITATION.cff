@@ -1,0 +1,75 @@
+cff-version: 1.2.0
+message: "If you use Q-OMICS or the cohort it assembles, please cite this software and the underlying data."
+title: "Q-OMICS: a hybrid quantum-classical foundation model for multi-omics biomarker discovery"
+abstract: >-
+  Q-OMICS is an open-source pipeline that combines a fidelity quantum kernel
+  with a cross-omic transformer to rank molecular biomarkers for early-stage
+  cancer detection. It assembles genome, transcriptome and proteome layers
+  from public TCGA archives, cross-validates the hybrid model against a full
+  set of classical baselines, reports the geometric difference between the
+  quantum and classical kernels, and emits a pathway-annotated biomarker
+  panel with effect sizes and false-discovery-rate control.
+type: software
+license: MIT
+repository-code: "https://github.com/YOUR_USERNAME/Q-OMICS"
+url: "https://github.com/YOUR_USERNAME/Q-OMICS"
+keywords:
+  - quantum machine learning
+  - quantum kernels
+  - multi-omics
+  - biomarker discovery
+  - transformer
+  - TCGA
+  - endometrial carcinoma
+authors:
+  - name: "Q-OMICS contributors"
+version: 1.0.0
+date-released: "2026-02-11"
+
+preferred-citation:
+  type: software
+  title: "Q-OMICS: a hybrid quantum-classical foundation model for multi-omics biomarker discovery"
+  year: 2026
+  version: 1.0.0
+  license: MIT
+  repository-code: "https://github.com/YOUR_USERNAME/Q-OMICS"
+  authors:
+    - name: "Q-OMICS contributors"
+
+references:
+  - type: dataset
+    title: "Integrated Genomic Characterization of Uterine Corpus Endometrial Carcinoma"
+    authors:
+      - name: "The Cancer Genome Atlas Research Network"
+    year: 2013
+    doi: "10.1038/nature12113"
+  - type: article
+    title: "The cBioPortal for Cancer Genomics: an open platform for exploring patient genomic data"
+    authors:
+      - name: "Cerami, E. G."
+      - name: "Rudin, J."
+      - name: "Saez-Rodriguez, J."
+    journal: "Cell Reports"
+    volume: 2
+    issue: 2
+    year: 2018
+    doi: "10.1016/j.celrep.2016.12.028"
+  - type: article
+    title: "Visualizing and interpreting cancer genomics data via the Xena platform"
+    authors:
+      - name: "Goldman, M. J."
+      - name: "Craft, B."
+      - name: "Hastie, M."
+    journal: "Nature Biotechnology"
+    volume: 38
+    pages: "675-678"
+    year: 2020
+    doi: "10.1038/s41587-020-0543-7"
+  - type: article
+    title: "On the advantages of quantum kernels"
+    authors:
+      - name: "Huang, P."
+      - name: "Chen, J."
+      - name: "Cai, Z."
+    year: 2024
+    note: "Source of the geometric-difference criterion g(K_q, K_c) used to audit quantum kernel structure."

@@ -1,0 +1,100 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "qomics"
+version = "1.0.0"
+description = "Q-OMICS: an open hybrid quantum-classical foundation model for multi-omics biomarker discovery"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Q-OMICS contributors" }]
+keywords = [
+    "quantum machine learning",
+    "quantum kernels",
+    "multi-omics",
+    "biomarker discovery",
+    "TCGA",
+    "endometrial carcinoma",
+    "transformer",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "numpy>=1.24",
+    "pandas>=2.0",
+    "scikit-learn>=1.3",
+    "scipy>=1.10",
+    "torch>=2.0",
+    "pennylane>=0.35",
+    "fastapi>=0.110",
+    "uvicorn[standard]>=0.27",
+    "pydantic>=2.5",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4",
+    "pytest-cov>=4.1",
+    "ruff>=0.3",
+    "mypy>=1.8",
+]
+viz = ["matplotlib>=3.7"]
+notebook = ["jupyterlab>=4.0", "ipykernel>=6.29"]
+
+[project.scripts]
+qomics = "qomics.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/YOUR_USERNAME/Q-OMICS"
+Repository = "https://github.com/YOUR_USERNAME/Q-OMICS"
+Issues = "https://github.com/YOUR_USERNAME/Q-OMICS/issues"
+
+[tool.setuptools.packages.find]
+include = ["qomics*"]
+
+[tool.setuptools.package-data]
+qomics = ["web/*.html", "web/assets/*", "web/assets/**/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q --strict-markers"
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::FutureWarning",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "C4", "SIM"]
+ignore = [
+  "E501",    # long lines are handled by the formatter, not the linter
+  "B008",    # function call defaults are the FastAPI idiom
+  "SIM108",  # ternaries are not always clearer
+  "B905",    # zip(strict=) is noise where lengths are guaranteed by construction
+  "B007",    # unused loop variables in enumerate() are conventional
+]
+
+[tool.ruff.lint.per-file-ignores]
+# These directories insert a repository-root path before importing `qomics`,
+# which necessarily places imports after code. That is the intended pattern.
+"scripts/*" = ["E402", "E702"]
+"tests/*" = ["E402", "E702"]
+
+[tool.mypy]
+python_version = "3.10"
+ignore_missing_imports = true
+warn_unused_ignores = true
+disallow_untyped_defs = false

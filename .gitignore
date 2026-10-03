@@ -1,0 +1,66 @@
+# --- data caches and raw downloads (regenerate with scripts/fetch_data.py) ---
+data/
+!data/.gitkeep
+
+# --- large binary model artefacts ---
+artifacts/*.pt
+artifacts/*.pth
+artifacts/*.npy
+artifacts/*.npz
+
+# --- but keep the human-readable run outputs so the repo is self-documenting ---
+!artifacts/run.json
+!artifacts/biomarkers.csv
+!artifacts/biomarkers.txt
+!artifacts/cohort_clinical.csv
+!artifacts/cohort_predictions.csv
+!artifacts/roc_primary.csv
+!artifacts/figures/
+
+# --- python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+.installed.cfg
+*.egg
+
+# --- environments ---
+.venv/
+venv/
+env/
+ENV/
+.env
+.env.*
+!.env.example
+
+# --- testing and typing ---
+.pytest_cache/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+.tox/
+
+# --- notebooks ---
+.ipynb_checkpoints/
+
+# --- editors and OS ---
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- scratch ---
+_scratch/
+*.log

@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>Q-OMICS — Hybrid quantum-classical foundation model for multi-omics biomarker discovery</title>
+<meta name="description" content="Q-OMICS is a hybrid quantum-classical foundation model for early-stage detection in endometrial carcinoma. Fidelity quantum kernel, cross-omic attention, attention-rollout biomarker attribution, evaluated on TCGA-UCEC.">
+<link rel="stylesheet" href="assets/css/app.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<!-- ============================= MASTHEAD ============================= -->
+<header class="masthead" role="banner">
+  <div class="masthead-inner">
+    <a class="wordmark" href="#overview" aria-label="Q-OMICS, return to overview">
+      <span class="wordmark-name">Q-OMICS</span>
+      <span class="wordmark-tag" data-bind="version">v—</span>
+    </a>
+
+    <nav class="masthead-nav" id="section-nav" aria-label="Sections">
+      <ul>
+        <li><a href="#overview" data-spy="overview">Overview</a></li>
+        <li><a href="#method" data-spy="method">Method</a></li>
+        <li><a href="#results" data-spy="results">Results</a></li>
+        <li><a href="#biomarkers" data-spy="biomarkers">Biomarkers</a></li>
+        <li><a href="#cohort" data-spy="cohort">Cohort</a></li>
+        <li><a href="#architecture" data-spy="architecture">Architecture</a></li>
+      </ul>
+    </nav>
+
+    <div class="masthead-status">
+      <span class="status-dot" data-bind="status-dot" data-state="unknown" aria-hidden="true"></span>
+      <span class="status-text" data-bind="status-text" role="status">Checking</span>
+    </div>
+  </div>
+</header>
+
+<!-- ============================= CONNECTION GATE ============================= -->
+<div class="gate" id="connection-gate" hidden aria-live="assertive">
+  <div class="wrap gate-inner">
+    <div class="gate-head">
+      <span class="eyebrow">Connection</span>
+      <h2 class="gate-title">Backend not reachable</h2>
+      <p class="gate-body">
+        The interface is served by the Q-OMICS application server. No response was received from
+        <code class="code">GET /api/health</code>, so no model, cohort or benchmark data is available.
+      </p>
+    </div>
+    <div class="gate-cmds">
+      <p class="gate-cmd-label">Start the server from the repository root</p>
+      <pre class="code-block"><code>uvicorn qomics.serving.app:app --host 127.0.0.1 --port 8000</code></pre>
+      <p class="gate-cmd-label">or</p>
+      <pre class="code-block"><code>python scripts/serve.py</code></pre>
+      <p class="gate-foot" data-bind="gate-detail"></p>
+    </div>
+  </div>
+</div>
+
+<main id="main">
+
+  <!-- ============================= OVERVIEW ============================= -->
+  <section class="section section-hero" id="overview" aria-labelledby="overview-h">
+    <div class="wrap">
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow" data-bind="hero-eyebrow">Multi-omics &middot; Endometrial carcinoma &middot; Research use only</p>
+          <h1 class="hero-title" id="overview-h">Early-stage detection from joint transcriptome, genome and proteome measurements.</h1>
+          <p class="hero-sub" data-bind="hero-sub">
+            A fidelity quantum kernel supplies the geometry; a cross-omic attention stack reads it.
+            Biomarker attribution is taken directly from the attention rollout rather than from a
+            post-hoc surrogate.
+          </p>
+          <p class="hero-meta">
+            <span data-bind="hero-cohort">TCGA-UCEC</span>
+            <span class="dot-sep" aria-hidden="true">/</span>
+            <span data-bind="hero-target">FIGO stage I vs stage II&ndash;IV</span>
+          </p>
+          <p class="hero-action no-print">
+            <a class="link-action" href="#results">Read the benchmark<span aria-hidden="true"> &rarr;</span></a>
+          </p>
+        </div>
+
+        <aside class="hero-aside" aria-label="System summary">
+          <dl class="spec-list">
+            <div class="spec-row"><dt>Backend</dt><dd data-bind="spec-backend">&mdash;</dd></div>
+            <div class="spec-row"><dt>Quantum kernel</dt><dd data-bind="spec-kernel">&mdash;</dd></div>
+            <div class="spec-row"><dt>Feature map</dt><dd data-bind="spec-map">&mdash;</dd></div>
+            <div class="spec-row"><dt>Feature tokens</dt><dd data-bind="spec-tokens">&mdash;</dd></div>
+            <div class="spec-row"><dt>Cross-validation</dt><dd data-bind="spec-splits">&mdash;</dd></div>
+            <div class="spec-row"><dt>Trained</dt><dd data-bind="spec-trained">&mdash;</dd></div>
+          </dl>
+        </aside>
+      </div>
+
+      <div class="datastrip" data-panel="datastrip" role="group" aria-label="Key performance figures">
+        <div class="datastrip-cell"><span class="ds-label">Mean ROC AUC</span><span class="ds-value" data-bind="ds-auc">&mdash;</span><span class="ds-note" data-bind="ds-auc-note">&nbsp;</span></div>
+        <div class="datastrip-cell"><span class="ds-label">Cohort</span><span class="ds-value" data-bind="ds-n">&mdash;</span><span class="ds-note" data-bind="ds-n-note">&nbsp;</span></div>
+        <div class="datastrip-cell"><span class="ds-label">Feature tokens</span><span class="ds-value" data-bind="ds-features">&mdash;</span><span class="ds-note" data-bind="ds-features-note">&nbsp;</span></div>
+        <div class="datastrip-cell"><span class="ds-label">Qubits</span><span class="ds-value" data-bind="ds-qubits">&mdash;</span><span class="ds-note" data-bind="ds-qubits-note">&nbsp;</span></div>
+      </div>
+
+      <div class="split-2">
+        <div class="panel">
+          <header class="panel-head">
+            <h3 class="panel-title">Modality contribution</h3>
+            <p class="panel-note">Mean attention-rollout importance aggregated per block, pooled over
+              <span data-bind="modality-splits">the</span> cross-validation splits.</p>
+          </header>
+          <div class="chart-host" id="chart-modality" data-chart="modality"></div>
+        </div>
+        <div class="panel">
+          <header class="panel-head">
+            <h3 class="panel-title">Cohort composition</h3>
+            <p class="panel-note">Class balance and target definition as served by the model registry.</p>
+          </header>
+          <div class="panel-body" data-panel="overview-cohort"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= METHOD ============================= -->
+  <section class="section" id="method" aria-labelledby="method-h">
+    <div class="wrap">
+      <header class="section-head">
+        <div>
+          <p class="eyebrow">Method</p>
+          <h2 class="section-title" id="method-h">Six stages, one token per molecular feature</h2>
+        </div>
+        <p class="section-lede">
+          Reduction is performed per layer so that no modality is compressed by a shared projection.
+          The quantum stage produces a kernel matrix over the reduced representation; the token
+          sequence is the reduced representation itself.
+        </p>
+      </header>
+
+      <ol class="pipeline" data-panel="pipeline" aria-label="Pipeline stages"></ol>
+
+      <div class="split-3">
+        <div class="panel">
+          <header class="panel-head"><h3 class="panel-title">Block widths</h3></header>
+          <div class="panel-body" data-panel="block-shapes"></div>
+        </div>
+        <div class="panel">
+          <header class="panel-head"><h3 class="panel-title">Optimisation</h3></header>
+          <div class="panel-body" data-panel="training"></div>
+        </div>
+        <div class="panel">
+          <header class="panel-head"><h3 class="panel-title">Model graph</h3></header>
+          <div class="panel-body" data-panel="model-graph"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= RESULTS ============================= -->
+  <section class="section" id="results" aria-labelledby="results-h">
+    <div class="wrap">
+      <header class="section-head">
+        <div>
+          <p class="eyebrow">Results</p>
+          <h2 class="section-title" id="results-h">Repeated stratified cross-validation, 8 models</h2>
+        </div>
+        <p class="section-lede" data-bind="results-lede">Target definition is served by <code class="code">/api/metrics</code>.</p>
+      </header>
+
+      <div class="panel panel-flush">
+        <header class="panel-head panel-head-row">
+          <div>
+            <h3 class="panel-title">Model comparison</h3>
+            <p class="panel-note">Mean &plusmn; standard deviation across folds. Primary model is marked.</p>
+          </div>
+          <div class="panel-tools no-print">
+            <span class="chip chip-accent" data-bind="primary-chip">primary &mdash;</span>
+          </div>
+        </header>
+        <div class="table-host" data-panel="metrics-table"></div>
+      </div>
+
+      <div class="split-2 split-2-wide">
+        <div class="panel">
+          <header class="panel-head">
+            <h3 class="panel-title">Receiver operating characteristic</h3>
+            <p class="panel-note">Cross-validated out-of-fold curves, positive class = stage II&ndash;IV.</p>
+          </header>
+          <div class="chart-host chart-host-tall" id="chart-roc" data-chart="roc"></div>
+        </div>
+        <div class="panel">
+          <header class="panel-head">
+            <h3 class="panel-title">Significance against baselines</h3>
+            <p class="panel-note">Paired difference in mean AUC per split; two-sided t-test over matched folds.</p>
+          </header>
+          <div class="panel-body" data-panel="significance"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= BIOMARKERS ============================= -->
+  <section class="section" id="biomarkers" aria-labelledby="biomarkers-h">
+    <div class="wrap">
+      <header class="section-head">
+        <div>
+          <p class="eyebrow">Biomarkers</p>
+          <h2 class="section-title" id="biomarkers-h">Ranked attribution panel</h2>
+        </div>
+        <p class="section-lede">
+          Importance is the mean attention-rollout weight on the feature token. Stability is the
+          fraction of splits in which the feature stays in the top decile. Effect size is Cohen's d
+          between stage I and stage II&ndash;IV.
+        </p>
+      </header>
+
+      <div class="toolbar no-print" role="group" aria-label="Biomarker filters">
+        <div class="toolbar-group">
+          <span class="toolbar-label" id="bm-block-label">Block</span>
+          <div class="segmented" role="group" aria-labelledby="bm-block-label">
+            <button type="button" class="seg" data-block="all" aria-pressed="true">All</button>
+            <button type="button" class="seg" data-block="transcriptome" aria-pressed="false">Transcriptome</button>
+            <button type="button" class="seg" data-block="genome" aria-pressed="false">Genome</button>
+            <button type="button" class="seg" data-block="proteome" aria-pressed="false">Proteome</button>
+          </div>
+        </div>
+
+        <div class="toolbar-group">
+          <label class="toolbar-label" for="bm-search">Search</label>
+          <input class="input input-search" id="bm-search" type="search" placeholder="symbol, axis or name" autocomplete="off" spellcheck="false">
+        </div>
+
+        <div class="toolbar-group">
+          <label class="toolbar-label" for="bm-limit">Rows</label>
+          <select class="input input-select" id="bm-limit">
+            <option value="25">25</option>
+            <option value="50" selected>50</option>
+            <option value="100">100</option>
+            <option value="250">250</option>
+          </select>
+        </div>
+
+        <div class="toolbar-group toolbar-end">
+          <button type="button" class="btn btn-quiet" id="bm-print">Print panel</button>
+          <button type="button" class="btn btn-quiet" id="bm-reset">Reset</button>
+        </div>
+      </div>
+
+      <p class="toolbar-status" data-bind="bm-status" role="status"></p>
+
+      <div class="split-2 split-2-wide">
+        <div class="panel panel-flush">
+          <div class="table-host table-host-scroll" data-panel="biomarkers-table"></div>
+        </div>
+
+        <div class="panel panel-drawer" id="bm-drawer" aria-live="polite" aria-label="Biomarker detail">
+          <header class="panel-head">
+            <h3 class="panel-title" data-bind="bm-drawer-title">Feature detail</h3>
+            <button type="button" class="btn btn-quiet btn-small no-print" id="bm-drawer-close" hidden>Close</button>
+          </header>
+          <div class="panel-body" data-panel="biomarker-detail">
+            <p class="muted-note">Select a row to load its provenance record.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= QUANTUM ============================= -->
+  <section class="section section-alt" id="quantum" aria-labelledby="quantum-h">
+    <div class="wrap">
+      <header class="section-head">
+        <div>
+          <p class="eyebrow">Quantum kernel</p>
+          <h2 class="section-title" id="quantum-h">Fidelity kernel provenance</h2>
+        </div>
+        <p class="section-lede">
+          The kernel is evaluated on an exact state-vector simulator at 6 qubits, so amplitudes are
+          computed rather than sampled. Norms, condition number and geometric difference are
+          reported as measured.
+        </p>
+      </header>
+
+      <div class="split-3">
+        <div class="panel">
+          <header class="panel-head"><h3 class="panel-title">Register</h3></header>
+          <div class="panel-body" data-panel="quantum-register"></div>
+        </div>
+        <div class="panel">
+          <header class="panel-head"><h3 class="panel-title">Kernel diagnostics</h3></header>
+          <div class="panel-body" data-panel="quantum-diagnostics"></div>
+        </div>
+        <div class="panel">
+          <header class="panel-head"><h3 class="panel-title">Labelled separation</h3></header>
+          <div class="chart-host" id="chart-separation" data-chart="separation"></div>
+        </div>
+      </div>
+
+      <div class="split-2 split-2-wide">
+        <div class="panel">
+          <header class="panel-head">
+            <h3 class="panel-title">Geometric difference</h3>
+            <p class="panel-note">Ratio of squared Hilbert-Schmidt distance to the same quantity for a classical kernel.</p>
+          </header>
+          <div class="panel-body" data-panel="quantum-geometry"></div>
+        </div>
+        <div class="panel">
+          <header class="panel-head">
+            <h3 class="panel-title">State-vector amplitudes</h3>
+            <p class="panel-note">First two amplitudes of the encoded register for one example per class.</p>
+          </header>
+          <div class="chart-host" id="chart-statevector" data-chart="statevector"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= COHORT ============================= -->
+  <section class="section" id="cohort" aria-labelledby="cohort-h">
+    <div class="wrap">
+      <header class="section-head">
+        <div>
+          <p class="eyebrow">Cohort</p>
+          <h2 class="section-title" id="cohort-h">Sample-level explorer</h2>
+        </div>
+        <p class="section-lede">
+          Every sample carries a held-out prediction and its confidence. Rows are served paged;
+          sorting and filtering are applied client-side to the loaded window.
+        </p>
+      </header>
+
+      <div class="toolbar no-print" role="group" aria-label="Cohort filters">
+        <div class="toolbar-group">
+          <label class="toolbar-label" for="co-stage">Stage</label>
+          <select class="input input-select" id="co-stage"><option value="">All stages</option></select>
+        </div>
+        <div class="toolbar-group">
+          <label class="toolbar-label" for="co-histology">Histology</label>
+          <select class="input input-select" id="co-histology"><option value="">All types</option></select>
+        </div>
+        <div class="toolbar-group">
+          <label class="toolbar-label" for="co-search">Search</label>
+          <input class="input input-search" id="co-search" type="search" placeholder="sample id" autocomplete="off" spellcheck="false">
+        </div>
+        <div class="toolbar-group">
+          <label class="toolbar-label" for="co-limit">Page size</label>
+          <select class="input input-select" id="co-limit">
+            <option value="25">25</option>
+            <option value="60" selected>60</option>
+            <option value="120">120</option>
+            <option value="463">463</option>
+          </select>
+        </div>
+        <div class="toolbar-group toolbar-end">
+          <button type="button" class="btn" id="co-download">Download CSV</button>
+        </div>
+      </div>
+
+      <div class="split-2 split-2-wide">
+        <div class="panel panel-flush">
+          <div class="table-host table-host-scroll" data-panel="cohort-table"></div>
+          <div class="pager no-print" data-bind="co-pager"></div>
+        </div>
+        <div class="panel">
+          <header class="panel-head">
+            <h3 class="panel-title">FIGO stage distribution</h3>
+            <p class="panel-note">Counts across the full cohort, not the loaded page.</p>
+          </header>
+          <div class="chart-host" id="chart-stage" data-chart="stage"></div>
+          <div class="panel-body panel-body-tight" data-panel="cohort-summary"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= PREDICTOR ============================= -->
+  <section class="section section-alt" id="predict" aria-labelledby="predict-h">
+    <div class="wrap">
+      <header class="section-head">
+        <div>
+          <p class="eyebrow">Predictor</p>
+          <h2 class="section-title" id="predict-h">Score a single sample</h2>
+        </div>
+        <p class="section-lede">
+          Supply feature values per modality. Omitted features are imputed from the training median,
+          so a partial submission is valid; unrecognised names are ignored. Coverage below reports how
+          much of the feature space you actually set.
+        </p>
+      </header>
+
+      <div class="split-2 split-2-wide">
+        <div class="panel">
+          <header class="panel-head panel-head-row">
+            <div>
+              <h3 class="panel-title">Input</h3>
+              <p class="panel-note">Values are z-scored features where the panel is standardised.</p>
+            </div>
+            <div class="panel-tools no-print">
+              <div class="segmented" role="group" aria-label="Input mode">
+                <button type="button" class="seg" data-mode="structured" aria-pressed="true">Structured</button>
+                <button type="button" class="seg" data-mode="raw" aria-pressed="false">Raw JSON</button>
+              </div>
+            </div>
+          </header>
+
+          <form class="form" id="predict-form" novalidate>
+            <div id="predict-structured">
+              <div class="feature-block" data-block="transcriptome">
+                <div class="feature-block-head">
+                  <h4 class="feature-block-title">Transcriptome</h4>
+                  <span class="feature-block-count" data-count="transcriptome">0</span>
+                  <button type="button" class="btn btn-quiet btn-small" data-add="transcriptome">Add feature</button>
+                </div>
+                <div class="feature-rows" data-rows="transcriptome"></div>
+              </div>
+
+              <div class="feature-block" data-block="genome">
+                <div class="feature-block-head">
+                  <h4 class="feature-block-title">Genome</h4>
+                  <span class="feature-block-count" data-count="genome">0</span>
+                  <button type="button" class="btn btn-quiet btn-small" data-add="genome">Add feature</button>
+                </div>
+                <div class="feature-rows" data-rows="genome"></div>
+              </div>
+
+              <div class="feature-block" data-block="proteome">
+                <div class="feature-block-head">
+                  <h4 class="feature-block-title">Proteome</h4>
+                  <span class="feature-block-count" data-count="proteome">0</span>
+                  <button type="button" class="btn btn-quiet btn-small" data-add="proteome">Add feature</button>
+                </div>
+                <div class="feature-rows" data-rows="proteome"></div>
+              </div>
+            </div>
+
+            <div id="predict-raw" hidden>
+              <label class="field-label" for="predict-json">Sample object</label>
+              <textarea class="input textarea" id="predict-json" rows="12" spellcheck="false" autocomplete="off"></textarea>
+              <p class="field-hint">
+                Shape: <code class="code">{"transcriptome": {"PTEN": -1.2}, "genome": {"MUT::PTEN": 1}}</code>
+              </p>
+            </div>
+
+            <div class="form-foot">
+              <div class="form-foot-field">
+                <label class="field-label" for="predict-topk">Top contributors</label>
+                <input class="input input-num" id="predict-topk" type="number" min="1" max="50" step="1" value="10">
+              </div>
+              <div class="form-foot-actions">
+                <button type="submit" class="btn btn-primary" id="predict-submit">Run prediction</button>
+                <button type="button" class="btn btn-quiet" id="predict-reset">Clear</button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="panel">
+          <header class="panel-head">
+            <h3 class="panel-title">Result</h3>
+            <p class="panel-note" data-bind="predict-meta">&nbsp;</p>
+          </header>
+          <div class="panel-body" data-panel="predict-result" aria-live="polite">
+            <p class="muted-note">No prediction requested.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= ARCHITECTURE ============================= -->
+  <section class="section" id="architecture" aria-labelledby="architecture-h">
+    <div class="wrap">
+      <header class="section-head">
+        <div>
+          <p class="eyebrow">Architecture</p>
+          <h2 class="section-title" id="architecture-h">Feature inventory and token budget</h2>
+        </div>
+        <p class="section-lede">
+          The inventory below is the exact feature space the reduction and tokenisation stages operate
+          on. Pathway axes are assigned upstream; features without an axis assignment are carried
+          unannotated.
+        </p>
+      </header>
+      <div class="panel panel-flush">
+        <div class="table-host" data-panel="features"></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============================= FOOTER ============================= -->
+<footer class="footer" role="contentinfo">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <p class="footer-title">Q-OMICS</p>
+        <p class="footer-text">
+          Hybrid quantum-classical foundation model for multi-omics biomarker discovery.
+          Open source, released under the licence in the repository.
+        </p>
+      </div>
+      <div class="footer-col">
+        <p class="footer-title">Data provenance</p>
+        <p class="footer-text">
+          TCGA-UCEC (GDC, 2025), retrieved through cBioPortal and UCSC Xena. All patient-level data
+          remain under the TCGA data use certification; no raw identifiers are redistributed here.
+        </p>
+      </div>
+      <div class="footer-col">
+        <p class="footer-title">Citation</p>
+        <p class="footer-text">
+          Cite the repository release and the <code class="code">docs/API_CONTRACT.md</code> version
+          used to produce a result. Benchmark numbers are tied to the model artefact hash reported by
+          <code class="code">/api/health</code>.
+        </p>
+      </div>
+      <div class="footer-col">
+        <p class="footer-title">Status</p>
+        <dl class="footer-status">
+          <div class="spec-row"><dt>Version</dt><dd data-bind="footer-version">&mdash;</dd></div>
+          <div class="spec-row"><dt>Artefacts</dt><dd data-bind="footer-loaded">&mdash;</dd></div>
+          <div class="spec-row"><dt>Cohort</dt><dd data-bind="footer-cohort">&mdash;</dd></div>
+          <div class="spec-row"><dt>Uptime</dt><dd data-bind="footer-uptime">&mdash;</dd></div>
+        </dl>
+      </div>
+    </div>
+    <p class="footer-notice">
+      Research use only. Q-OMICS is not a diagnostic device and must not be used for patient
+      management, screening or any decision requiring a validated clinical assay.
+    </p>
+  </div>
+</footer>
+
+<noscript>
+  <div class="wrap"><p class="footer-notice">This interface requires JavaScript to load model data from the API.</p></div>
+</noscript>
+
+<script src="assets/js/charts.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>

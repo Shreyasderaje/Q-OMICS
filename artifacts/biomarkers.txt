@@ -1,0 +1,45 @@
+Q-OMICS ranked biomarker panel (192 features screened)
+ranking method: attention_rollout
+
+  #  feature                    block          axis                       imp   stab       d        q
+--------------------------------------------------------------------------------------------------------
+  1  CNA::CCNE1                 genome         cell_cycle_cdk          0.0053   0.13  -0.507    0.006
+  2  CNA::CD22                  genome         immune                  0.0054   0.14  -0.458    0.006
+  3  CNA::SNAI1                 genome         emt_invasion            0.0053   0.10  -0.494    0.006
+  4  CNA::HNF4A                 genome         estrogen_progesterone   0.0053   0.10  -0.460    0.006
+  5  CNA::MMP9                  genome         emt_invasion            0.0053   0.11  -0.449    0.006
+  6  CNA::NCOA3                 genome         tumor_suppressors       0.0053   0.10  -0.445    0.006
+  7  CNA::MYBL2                 genome         cell_cycle              0.0053   0.11  -0.427    0.006
+  8  ER-alpha-R-V               proteome       hormone receptor        0.0051   0.14   0.459    0.006
+  9  CNA::MYC                   genome         wnt_stemness            0.0053   0.09  -0.455    0.006
+ 10  CNA::BCL2L1                genome         apoptosis_ddr           0.0053   0.08  -0.438    0.006
+ 11  PDCD4-R-C                  proteome       unclassified            0.0051   0.19   0.359    0.006
+ 12  CNA::SDHA                  genome         metabolism              0.0054   0.14  -0.318    0.006
+ 13  E-Cadherin-R-V             proteome       adhesion                0.0051   0.17   0.365    0.006
+ 14  CNA::MYCN                  genome         cell_cycle_cdk          0.0054   0.09  -0.372    0.006
+ 15  CNA::TERT                  genome         cell_cycle_cdk          0.0054   0.14  -0.305    0.006
+ 16  CNA::SPINT2                genome         estrogen_progesterone   0.0054   0.09  -0.364    0.006
+ 17  Akt_pT308-R-V              proteome       PI3K/AKT/mTOR           0.0051   0.14   0.392    0.006
+ 18  CNA::FASN                  genome         metabolism              0.0054   0.12  -0.320    0.006
+ 19  CNA::ERBB2                 genome         ras_mapk                0.0054   0.07  -0.364    0.006
+ 20  CNA::GRB2                  genome         ras_mapk                0.0054   0.14  -0.273    0.019
+ 21  Akt_pS473-R-V              proteome       PI3K/AKT/mTOR           0.0050   0.13   0.378    0.006
+ 22  MSH6                       transcriptome  dna_repair              0.0051   0.09  -0.402    0.006
+ 23  CNA::SOX17                 genome         tumor_suppressors       0.0053   0.09  -0.349    0.006
+ 24  CNA::SOX2                  genome         wnt_stemness            0.0053   0.08  -0.338    0.006
+ 25  CNA::PIK3CA                genome         pi3k_pten               0.0053   0.07  -0.353    0.006
+ 26  CNA::CNN1                  genome         tgf_b_myogenesis        0.0054   0.08  -0.303    0.006
+ 27  CNA::ATR                   genome         tumor_suppressors       0.0053   0.09  -0.308    0.006
+ 28  CNA::SMARCA4               genome         tumor_suppressors       0.0054   0.09  -0.277    0.019
+ 29  CNA::BIRC5                 genome         apoptosis_ddr           0.0054   0.14  -0.228    0.044
+ 30  CNA::CCNE2                 genome         cell_cycle_cdk          0.0053   0.10  -0.291    0.015
+ 31  CNA::HES1                  genome         notch_esri              0.0053   0.07  -0.323    0.006
+ 32  CNA::CDK1                  genome         cell_cycle              0.0054   0.11  -0.249    0.023
+ 33  CHEK1                      transcriptome  apoptosis_ddr           0.0051   0.10  -0.321    0.006
+ 34  CDKN2B                     transcriptome  cell_cycle_cdk          0.0052   0.09  -0.327    0.006
+ 35  CNA::RSPO2                 genome         wnt_stemness            0.0053   0.08  -0.301    0.006
+ 36  CNA::ANGPT1                genome         angiogenesis_hypoxia    0.0053   0.08  -0.301    0.006
+ 37  CNA::AKT2                  genome         pi3k_pten               0.0054   0.06  -0.299    0.011
+ 38  CNA::NCOA2                 genome         tumor_suppressors       0.0053   0.09  -0.275    0.015
+ 39  SNAI1                      transcriptome  emt_invasion            0.0051   0.08  -0.331    0.006
+ 40  Annexin-1-M-E              proteome       unclassified            0.0051   0.16   0.245    0.038

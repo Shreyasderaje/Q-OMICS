@@ -55,9 +55,9 @@ notebook = ["jupyterlab>=4.0", "ipykernel>=6.29"]
 qomics = "qomics.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/YOUR_USERNAME/Q-OMICS"
-Repository = "https://github.com/YOUR_USERNAME/Q-OMICS"
-Issues = "https://github.com/YOUR_USERNAME/Q-OMICS/issues"
+Homepage = "https://github.com/Shreyasderaje/Q-OMICS"
+Repository = "https://github.com/Shreyasderaje/Q-OMICS"
+Issues = "https://github.com/Shreyasderaje/Q-OMICS/issues"
 
 [tool.setuptools.packages.find]
 include = ["qomics*"]

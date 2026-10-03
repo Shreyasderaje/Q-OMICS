@@ -12,7 +12,7 @@ approach is cheaper than a pull request that needs rewriting.
 ## Development setup
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/Q-OMICS.git
+git clone https://github.com/Shreyasderaje/Q-OMICS.git
 cd Q-OMICS
 python -m venv .venv && source .venv/bin/activate
 pip install -e ".[dev,viz]"

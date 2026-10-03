@@ -48,7 +48,7 @@ tokens* and lets attention learn which markers co-vary across layers.
 ## Quick start
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/Q-OMICS.git
+git clone https://github.com/Shreyasderaje/Q-OMICS.git
 cd Q-OMICS
 
 python -m venv .venv && source .venv/bin/activate     # Windows: .venv\Scripts\activate

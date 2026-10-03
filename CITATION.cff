@@ -11,8 +11,8 @@ abstract: >-
   panel with effect sizes and false-discovery-rate control.
 type: software
 license: MIT
-repository-code: "https://github.com/YOUR_USERNAME/Q-OMICS"
-url: "https://github.com/YOUR_USERNAME/Q-OMICS"
+repository-code: "https://github.com/Shreyasderaje/Q-OMICS"
+url: "https://github.com/Shreyasderaje/Q-OMICS"
 keywords:
   - quantum machine learning
   - quantum kernels
@@ -22,9 +22,11 @@ keywords:
   - TCGA
   - endometrial carcinoma
 authors:
-  - name: "Q-OMICS contributors"
+  - family-names: "Deraje"
+    given-names: "Shreyas"
+    name: "Shreyas Deraje"
 version: 1.0.0
-date-released: "2026-02-11"
+date-released: "2026-10-03"
 
 preferred-citation:
   type: software
@@ -32,9 +34,11 @@ preferred-citation:
   year: 2026
   version: 1.0.0
   license: MIT
-  repository-code: "https://github.com/YOUR_USERNAME/Q-OMICS"
+  repository-code: "https://github.com/Shreyasderaje/Q-OMICS"
   authors:
-    - name: "Q-OMICS contributors"
+    - family-names: "Deraje"
+      given-names: "Shreyas"
+      name: "Shreyas Deraje"
 
 references:
   - type: dataset

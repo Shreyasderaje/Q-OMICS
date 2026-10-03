@@ -1,9 +1,12 @@
 #!/usr/bin/env python
 """Train Q-OMICS end to end.
 
-    python scripts/train.py                       # full protocol (15 folds)
-    python scripts/train.py --repeats 1 --splits 5   # quick pass
-    python scripts/train.py --skip-transformer      # baselines only
+    python scripts/train.py                            # full protocol (5 splits x 2 repeats)
+    python scripts/train.py --repeats 1 --splits 5     # quick pass
+    python scripts/train.py --skip-transformer          # baselines + quantum only
+
+The cohort is downloaded and assembled on first run; the response cache in
+``data/cache/`` makes subsequent runs fast. No fetch step is required.
 """
 
 from __future__ import annotations
